@@ -163,5 +163,4 @@ except KeyboardInterrupt:
     print("Выходим")
     bot.loop.run_until_complete(Client.close(bot))
 finally:
-    update_db.cancel()
     print("Закрыто")
