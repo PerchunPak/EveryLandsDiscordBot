@@ -4,12 +4,13 @@ from psutil import Process
 
 from datetime import datetime
 from os import getpid
+from traceback import format_exc
 
 from yaml import safe_load
 from re import match
 
 # Токен бота
-TOKEN = 'TOKEN_HERE'
+TOKEN = 'ODMwNDQ2MzMwNDY2OTI2NjEz.YHGzag.qzR2TxhDjoGfO7t7uuNdOypSyPg'
 
 bot_intents = Intents.default()
 bot_intents.members = True
@@ -66,19 +67,23 @@ async def on_message(message):
     EVERYLANDS_GUILD_ID = 603908149896019978
     IDEAS_CHANNEL_ID = 810644809416310784
 	
-    if message.guild.id != EVERYLANDS_GUILD_ID or message.channel.id != IDEAS_CHANNEL_ID:
-        return
+    try:
+        if message.guild.id != EVERYLANDS_GUILD_ID or message.channel.id != IDEAS_CHANNEL_ID:
+            return
+        ls = False
+    except AttributeError: ls = True  # проверка на лс
 
+    # все возможные цвета в майне
     supported_colors = ['BLACK', 'DARK_BLUE', 'DARK_AQUA', 'DARK_RED',
                         'DARK_PURPLE', 'GOLD', 'GRAY', 'DARK_GRAY', 'BLUE', 'GREEN',
                         'AQUA', 'RED', 'LIGHT_PURPLE', 'YELLOW', 'WHITE']
     try:
-        parsedMsg = str(message.content).split('```')[1]
-        if '#' in parsedMsg: raise Exception('# in message')
-        msg = safe_load(parsedMsg)
+        parsedMsg = str(message.content).split('```')[1]  # уберает ``` с сообщения
+        if '#' in parsedMsg: raise Exception('# in message')  # реагирует на коментарии в сообщении
+        msg = safe_load(parsedMsg)  # парсит в YAML
         if len(msg) != 1: raise Exception('Need to be one ID')
-        for id in msg: msgId = msg[id]
-        if len(str(msgId['name']).split('/')) != 3: raise Exception('Not correct name')
+        for id in msg: msgId = msg[id]  # находит айди указаное пользователем, и использует его дальше
+        if len(str(msgId['name']).split('/')) != 3: raise Exception('Not correct name')  # должно быть 3 качества
         for ell in msgId['ingredients']:
             if len(str(ell).split('/')) != 2: raise Exception('Not correct ingredients')
         if isinstance(msgId['cookingtime'], int) == False: raise Exception('cookingtime not int')
@@ -98,8 +103,14 @@ async def on_message(message):
             for ell in msgId['lore']: 
                 if match(r'\+{1,3}', ell) == None: raise Exception('Not correct lore')
     except Exception as e:
-        # print(e)
-        await message.delete()
+        if not ls: await message.delete()  # если мы не в лс, удаляет сообщение
+
+        exception_info = format_exc()
+        if '```' in exception_info: 
+            exception_info = exception_info.replace('```', "*'''*")  # * означает что там были `
+            additional_comment = "(\*'''\* это \```)"
+        else: additional_comment = ''
+
         MSGuser = bot.get_user(message.author.id)
         await MSGuser.send( 'Привет! Видимо ты написал неправильно сообщение в канал с идеями для напитков! '
                         #  f'Если это не так, пожалуйста напиши {bot.app_info.owner}\n'
@@ -138,6 +149,10 @@ async def on_message(message):
                             '     опьянение: много\n'
                             '```\n'
                             '\n\n\nПричина удаления сообщения: ' + str(e))
+        await MSGuser.send( '\nTraceBack для разработчика: %s ```\n%s\n```'
+                            '\nЕсли вы знаете язык програмирования Python, можете изучить наши '
+                            'исходники по ссылке https://github.com/PerchunPak/EveryLandsDiscordBot' 
+                            % (additional_comment, str(exception_info)))
 
 
 try:
