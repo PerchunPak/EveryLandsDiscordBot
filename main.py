@@ -76,7 +76,7 @@ async def on_message(message):
         parsedMsg = str(message.content).split('```')[1]
         msg = safe_load(parsedMsg)
         if len(msg) != 1: raise Exception('Need to be one ID')
-        msgId = msg[0]
+        msgId = msg['id']
         if len(str(msgId['name']).split('/')) != 3: raise Exception('Not correct name')
         for ell in msgId['ingredients']:
             if len(str(ell).split('/')) != 2: raise Exception('Not correct ingredients')
