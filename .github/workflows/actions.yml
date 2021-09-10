@@ -42,8 +42,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Change Token
-      run: sed -i 's/TOKEN_HERE/${{ secrets.bot_token }}/' main.py
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
@@ -51,3 +49,10 @@ jobs:
         ftp-username: root
         ftp-password: ${{ secrets.ssh_password }}
         git-ftp-args: --insecure
+    - name: Change Token
+      uses: garygrossgarten/github-action-ssh@v0.6.4
+      with:
+        command: sed -i 's/TOKEN_HERE/${{ secrets.bot_token }}/' main.py
+        host: everylands.ru
+        username: root
+        password: ${{ secrets.ssh_password }}
