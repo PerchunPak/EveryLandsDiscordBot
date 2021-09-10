@@ -10,7 +10,7 @@ from yaml import safe_load
 from re import match
 
 # Токен бота
-TOKEN = 'ODMwNDQ2MzMwNDY2OTI2NjEz.YHGzag.qzR2TxhDjoGfO7t7uuNdOypSyPg'
+TOKEN = 'TOKEN_HERE'
 
 bot_intents = Intents.default()
 bot_intents.members = True
