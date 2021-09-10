@@ -49,13 +49,3 @@ jobs:
         ftp-username: root
         ftp-password: ${{ secrets.ssh_password }}
         git-ftp-args: --insecure
-    - name: Restart bot
-      uses: garygrossgarten/github-action-ssh@v0.6.4
-      with:
-        command: |
-          screen -r botDiscord
-          ctrl c
-          python3 main.py
-        host: everylands.ru
-        username: root
-        password: ${{ secrets.ssh_password }}
