@@ -77,21 +77,23 @@ async def on_message(message):
         if '#' in parsedMsg: raise Exception('# in message')
         msg = safe_load(parsedMsg)
         if len(msg) != 1: raise Exception('Need to be one ID')
-        for id in msg: msgId = id
+        for id in msg: msgId = msg[id]
         if len(str(msgId['name']).split('/')) != 3: raise Exception('Not correct name')
         for ell in msgId['ingredients']:
             if len(str(ell).split('/')) != 2: raise Exception('Not correct ingredients')
         if isinstance(msgId['cookingtime'], int) == False: raise Exception('cookingtime not int')
         if isinstance(msgId['distillruns'], int) == False: raise Exception('distillruns not int')
         if isinstance(msgId['distilltime'], int) == False: raise Exception('distilltime not int')
-        if isinstance(msgId['wood'], int) == False: raise Exception('wood not int')
+        if 'wood' in msgId:
+            if isinstance(msgId['wood'], int) == False: raise Exception('wood not int')
         if isinstance(msgId['age'], int) == False: raise Exception('age not int')
         if not msgId['color'] in supported_colors:
             if match(r'([a-f\d]{3}|[a-f\d]{6})$', msgId['color']) == None: raise Exception('Not correct color')
         if isinstance(msgId['difficulty'], int) == False: raise Exception('difficulty not int')
         if isinstance(msgId['alcohol'], int) == False: raise Exception('alcohol not int')
-        for ell in msgId['effects']: 
-            if len(str(ell).split('/')) != 3: raise Exception('Not correct effects')
+        if 'effects' in msgId:
+            for ell in msgId['effects']: 
+                if len(str(ell).split('/')) != 3: raise Exception('Not correct effects')
         if 'lore' in msgId:
             for ell in msgId['lore']: 
                 if match(r'\+{1,3}', ell) == None: raise Exception('Not correct lore')
