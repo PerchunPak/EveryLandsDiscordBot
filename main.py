@@ -37,18 +37,16 @@ async def on_connect():
 @bot.event
 async def on_ready():
 
-    print("""\n
-    Зашел как:
-    %s
-    %s
-    -----------------
-    %s
-    -----------------
-    Шардов: %s
-    Серверов: %s
-    Пользователей: %s
-    -----------------
-    \n""" % (bot.user, bot.user.id, datetime.now().strftime("%m/%d/%Y %X"), str(bot.shard_count), str(len(bot.guilds)), str(len(bot.users))))
+    print('\nЗашел как:\n'
+         f'{bot.user}\n'
+         f'{bot.user.id}\n'
+          '-----------------\n'
+         f'{datetime.now().strftime("%X %d.%m.%Y")}\n'
+          '-----------------\n'
+         f'Шардов: {str(bot.shard_count)}\n'
+         f'Серверов: {str(len(bot.guilds))}\n'
+         f'Пользователей: {str(len(bot.users))}\n'
+          '-----------------')
 
     bot.ready_for_commands = True
     bot.started_at = datetime.utcnow()
@@ -156,15 +154,14 @@ async def on_message(message):
 
 
 try:
-    bot.loop.run_until_complete(
-        bot.start(TOKEN))
+    bot.loop.run_until_complete(bot.start(TOKEN))
 except KeyboardInterrupt:
     print("\nЗакрытие")
-    bot.loop.run_until_complete(
-        bot.change_presence(status=Status.invisible))
+    bot.loop.run_until_complete(bot.change_presence(status=Status.invisible))
     for e in bot.extensions.copy():
         bot.unload_extension(e)
     print("Выходим")
-    bot.loop.run_until_complete(Client.close())
+    bot.loop.run_until_complete(Client.close(bot))
 finally:
+    update_db.cancel()
     print("Закрыто")
