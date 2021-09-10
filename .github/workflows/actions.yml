@@ -33,20 +33,19 @@ jobs:
     #- name: Test with pytest
     #  run: pytest
 
-  deploy:
-    needs: test
-    if: |
-      needs.test.result == 'success' &&
-      github.event_name != 'pull_request'
-      
-
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@3.1.1
-      with:
-        ftp-server: ${{ secrets.ftp_server }}
-        ftp-username: root
-        ftp-password: ${{ secrets.ssh_password }}
-        git-ftp-args: --insecure
+  #deploy:
+  #  needs: test
+  #  if: |
+  #    needs.test.result == 'success' &&
+  #    github.event_name != 'pull_request'
+  #
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #  - uses: actions/checkout@v2
+  #  - name: FTP Deploy
+  #    uses: SamKirkland/FTP-Deploy-Action@3.1.1
+  #    with:
+  #      ftp-server: ${{ secrets.ftp_server }}
+  #      ftp-username: root
+  #      ftp-password: ${{ secrets.ssh_password }}
+  #      git-ftp-args: --insecure
