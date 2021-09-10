@@ -52,7 +52,9 @@ jobs:
     - name: Change Token
       uses: garygrossgarten/github-action-ssh@v0.6.4
       with:
-        command: sed -i 's/TOKEN_HERE/${{ secrets.bot_token }}/' main.py
+        command: |
+          cd /root/botDiscord/
+          sed -i 's/TOKEN_HERE/${{ secrets.bot_token }}/' main.py
         host: everylands.ru
         username: root
         password: ${{ secrets.ssh_password }}
