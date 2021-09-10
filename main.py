@@ -124,7 +124,7 @@ async def on_message(message):
                             '  wheatbeer:\n'
                             '     name: Вонючее Пшеничное пиво/Пшеничное пиво/Прекрасное Пшеничное Пиво\n'
                             '     ingredients:\n       - Wheat/3\n     cookingtime: 1\n     distillruns: 5\n'
-                            '     distilltime: 30 # время дистиляции\n     wood: 1\n     age: 21\n'
+                            '     distilltime: 30\n     wood: 1\n     age: 21\n'
                             '     color: "ffb84d"\n     difficulty: 6\n     alcohol: 30\n'
                             '     lore:\n       - +++ &8Освежающе\n'
                             '```\n'
