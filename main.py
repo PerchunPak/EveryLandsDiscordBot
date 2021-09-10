@@ -69,14 +69,15 @@ async def on_message(message):
     if message.guild.id != EVERYLANDS_GUILD_ID or message.channel.id != IDEAS_CHANNEL_ID:
         return
 
-    support_colors = ['BLACK', 'DARK_BLUE', 'DARK_AQUA', 'DARK_RED',
+    supported_colors = ['BLACK', 'DARK_BLUE', 'DARK_AQUA', 'DARK_RED',
                         'DARK_PURPLE', 'GOLD', 'GRAY', 'DARK_GRAY', 'BLUE', 'GREEN',
                         'AQUA', 'RED', 'LIGHT_PURPLE', 'YELLOW', 'WHITE']
     try:
         parsedMsg = str(message.content).split('```')[1]
+        if '#' in parsedMsg: raise Exception('# in message')
         msg = safe_load(parsedMsg)
         if len(msg) != 1: raise Exception('Need to be one ID')
-        msgId = msg['id']
+        for id in msg: msgId = id
         if len(str(msgId['name']).split('/')) != 3: raise Exception('Not correct name')
         for ell in msgId['ingredients']:
             if len(str(ell).split('/')) != 2: raise Exception('Not correct ingredients')
@@ -85,7 +86,7 @@ async def on_message(message):
         if isinstance(msgId['distilltime'], int) == False: raise Exception('distilltime not int')
         if isinstance(msgId['wood'], int) == False: raise Exception('wood not int')
         if isinstance(msgId['age'], int) == False: raise Exception('age not int')
-        if not msgId['color'] in support_colors:
+        if not msgId['color'] in supported_colors:
             if match(r'([a-f\d]{3}|[a-f\d]{6})$', msgId['color']) == None: raise Exception('Not correct color')
         if isinstance(msgId['difficulty'], int) == False: raise Exception('difficulty not int')
         if isinstance(msgId['alcohol'], int) == False: raise Exception('alcohol not int')
@@ -134,7 +135,7 @@ async def on_message(message):
                             '       - Яйцо эндер дракона/3\n     цвет: зеленый\n'
                             '     опьянение: много\n'
                             '```\n'
-                            '\n\n\nПричина удаления сообщения: %s' % e)
+                            '\n\n\nПричина удаления сообщения: ' + e)
 
 
 try:
