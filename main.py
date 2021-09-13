@@ -59,8 +59,7 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    if not bot.ready_for_commands or message.author.bot:
-        return
+    if not bot.ready_for_commands: return
 
     EVERYLANDS_GUILD_ID = 603908149896019978
     IDEAS_CHANNEL_ID = 810644809416310784
