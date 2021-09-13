@@ -152,7 +152,7 @@ async def on_message(message):
 
 
 @bot.command(hidden=True)
-async def dele(ctx, id = None):
+async def dele(ctx, id=None):
     PERCHUN_ID = 379353300887273472
     if not ctx.author.id == PERCHUN_ID: return
 
