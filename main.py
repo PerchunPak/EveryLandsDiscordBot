@@ -8,7 +8,7 @@ from yaml import safe_load
 from re import match
 
 # Токен бота
-TOKEN = ''
+TOKEN = 'TOKEN_HERE'
 
 bot_intents = Intents.default()
 bot_intents.members = True
