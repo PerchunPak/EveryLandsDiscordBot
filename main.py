@@ -1,6 +1,5 @@
 from discord.ext import commands
 from discord import Intents, Status, Activity, ActivityType, Client
-from psutil import Process
 
 from datetime import datetime
 from os import getpid
@@ -25,7 +24,6 @@ bot = commands.Bot(
     fetch_offline_members=True
 )
 
-bot.process = Process(getpid())
 bot.ready_for_commands = False
 
 
