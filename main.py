@@ -2,20 +2,19 @@ from discord.ext import commands
 from discord import Intents, Status, Activity, ActivityType, Client
 
 from datetime import datetime
-from os import getpid
 from traceback import format_exc
 
 from yaml import safe_load
 from re import match
 
 # Токен бота
-TOKEN = 'TOKEN_HERE'
+TOKEN = ''
 
 bot_intents = Intents.default()
 bot_intents.members = True
 
 bot = commands.Bot(
-    command_prefix=commands.when_mentioned,
+    command_prefix='!',
     description="EveryLands бот",
     case_insensitive=True,
     help_command=None,
@@ -59,6 +58,8 @@ async def on_ready():
 async def on_message(message):
     if not bot.ready_for_commands: return
 
+    await bot.process_commands(message)
+
     EVERYLANDS_GUILD_ID = 603908149896019978
     IDEAS_CHANNEL_ID = 810644809416310784
 
@@ -92,16 +93,16 @@ async def on_message(message):
         if not isinstance(msgId['difficulty'], int): raise Exception('difficulty not int')
         if not isinstance(msgId['alcohol'], int): raise Exception('alcohol not int')
         if 'effects' in msgId:
-            for ell in msgId['effects']: 
+            for ell in msgId['effects']:
                 if len(str(ell).split('/')) != 3: raise Exception('Not correct effects')
         if 'lore' in msgId:
-            for ell in msgId['lore']: 
+            for ell in msgId['lore']:
                 if match(r'\+{1,3}', ell) is None: raise Exception('Not correct lore')
     except Exception as e:
         if not ls: await message.delete()  # если мы не в лс, удаляет сообщение
 
         exception_info = format_exc()
-        if '```' in exception_info: 
+        if '```' in exception_info:
             exception_info = exception_info.replace('```', "*'''*")  # * означает что там были `
             additional_comment = "(\*'''\* это \```)"  # type: ignore  # noqa: W605
         else: additional_comment = ''
@@ -146,8 +147,23 @@ async def on_message(message):
                            '\n\n\nПричина удаления сообщения: ' + str(e))
         await MSGuser.send('\nTraceBack для разработчика: %s ```\n%s\n```'
                            '\nЕсли вы знаете язык програмирования Python, можете изучить наши '
-                           'исходники по ссылке https://github.com/PerchunPak/EveryLandsDiscordBot' 
+                           'исходники по ссылке https://github.com/PerchunPak/EveryLandsDiscordBot'
                            % (additional_comment, str(exception_info)))
+
+
+@bot.command(hidden=True)
+async def dele(ctx, id = None):
+    PERCHUN_ID = 379353300887273472
+    if not ctx.author.id == PERCHUN_ID: return
+
+    await ctx.message.delete()
+    # reference - сообщение на которое ответили
+    if id is None and ctx.message.reference is None: return
+
+    if id is None: id = ctx.message.reference.resolved.id
+    msg = await ctx.channel.fetch_message(id)
+    await msg.delete()
+
 
 
 try:
