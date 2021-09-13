@@ -100,7 +100,7 @@ async def on_message(message):
             for ell in msgId['lore']:
                 if match(r'\+{1,3}', ell) is None: raise Exception('Not correct lore')
     except Exception as e:
-        if not ls: await message.delete()  # если мы не в лс, удаляет сообщение
+        # if not ls: await message.delete()  # если мы не в лс, удаляет сообщение
 
         exception_info = format_exc()
         if '```' in exception_info:
